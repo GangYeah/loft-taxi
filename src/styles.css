@@ -10,6 +10,7 @@ body {
     font-family: "Roboto";
     font-size: 2rem;
     color: #000;
+    margin: 0;
 }
 
 p {
@@ -36,12 +37,13 @@ button {
 }
 
 input {
-    border:none;
-    background-image:none;
-    background-color:transparent;
+    border: none;
+    background-image: none;
+    background-color: transparent;
     box-shadow: none;
-    outline:none
+    outline: none
 }
+
 .container {
     width: 100%;
     margin: 0 auto;
@@ -51,6 +53,9 @@ input {
 
 /* components */
 
+.page {
+    margin-top: 104px;
+}
 .button {
     width: 353px;
     padding: 16px 0;
@@ -62,7 +67,7 @@ input {
 
 .button--ready {
     cursor: pointer;
-    background: #FDBF5A;   
+    background: #FDBF5A;
 }
 
 .button--ready:hover {
@@ -116,7 +121,7 @@ input {
     padding: 12px 0 8px 0;
     color: #828282;
     font-size: 1.8rem;
-    border-bottom: 2px solid #E4E4E4;;
+    border-bottom: 2px solid #E4E4E4;
 }
 
 .form__reg {
@@ -125,5 +130,12 @@ input {
 }
 
 .form__button {
-    margin-bottom: 33px;
+    margin-bottom: 33px !important
+}
+
+.map-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%
 }

@@ -1,23 +1,32 @@
 .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background: #000;
     color: #fff;
 }
+
 .header__bar, .header__logo, .header__nav ul {
     display: flex;
 }
+
 .header__bar {
     justify-content: space-between;
     padding: 20px 0;
 }
+
 .header__logo {
     align-items: center;
 }
+
 .header__logo img:first-child {
     margin-right: 15px;
 }
+
 .header__href {
     margin-right: 50px;
 }
+
 .header__href:hover {
     color: #FDBF5A;
 }

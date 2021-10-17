@@ -1,14 +1,17 @@
 import './styles.css'
 
+import { withAuth } from './AuthContext'
 import Login from './Login'
 import Register from './Register'
 
+import Background from './Background'
 import Header from './Header'
 
 import Map from './Map'
 import Profile from './Profile'
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 let PAGES = {
   'map': <Map />,
@@ -16,7 +19,11 @@ let PAGES = {
 }
 
 class App extends React.Component {
-  state = { currPage: 'map', currMode: 'login' };
+  static propTypes = {
+    isLoggedIn: PropTypes.bool
+  }
+
+  state = { currPage: 'map', currMode: true };
 
   changeCurrentPage = (page) => {
     this.setState({ currPage: page });
@@ -26,31 +33,32 @@ class App extends React.Component {
     this.setState({ currMode: mode });
   }
 
-  renderSwitch(param) {
-    switch (param) {
-      case 'login':
-        return <Login func={this.changeCurrentMode}/>;
-      case 'register':
-        return <Register func={this.changeCurrentMode}/>;
-      case 'after':
-        return (
-          <>
-            <Header func1={this.changeCurrentPage} func2={this.changeCurrentMode} />
-            {PAGES[this.state.currPage]}
-          </>
-        );
-      default:
-        break;
-    }
-  }
-
   render() {
     return (
       <div className="App">
-        {this.renderSwitch(this.state.currMode)}
+        {
+          this.props.isLoggedIn ? (
+            <>
+              <div className="page">
+                {PAGES[this.state.currPage]}
+              </div>
+              <Header {...this.props} changePageHandler={this.changeCurrentPage} />
+            </>
+          ) : (
+            <Background>
+              {
+              this.state.currMode ? (
+                <Login {...this.props} changeModeHandler={this.changeCurrentMode} />
+              ) : (
+                <Register changeModeHandler={this.changeCurrentMode} />
+              )
+              }
+            </Background>
+          )
+        }
       </div>
     );
   }
 }
 
-export default App;
+export default withAuth(App);
