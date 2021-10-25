@@ -1,12 +1,20 @@
+import React from "react";
+
 import './header.css'
 import logo from './logo.svg'
 import logo_text from './lofttaxi.png'
 import PropTypes from "prop-types";
-import { useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import { Link, useHistory } from 'react-router-dom';
+import {logIn, logOut} from './actions'
+import {connect} from 'react-redux'
 
 function Header(props) {
-    let {logout} = useContext(AuthContext);
+    let history = useHistory();
+
+    function handleClick() {
+        props.logOut();
+        history.push("/login");
+    }
 
     return (
         <header className="header">
@@ -18,9 +26,9 @@ function Header(props) {
                     </div>
                     <nav className="header__nav">
                         <ul>
-                            <li><button onClick={() => props.changePageHandler('map')} className="header__href">Карта</button></li>
-                            <li><button onClick={() => props.changePageHandler('profile')} className="header__href">Профиль</button></li>
-                            <li><button onClick={() => logout()} className="header__href">Выйти</button></li>
+                            <li><Link to="/map" className="header__href">Карта</Link></li>
+                            <li><Link to="/profile" className="header__href">Профиль</Link></li>
+                            <li><button onClick={handleClick} className="header__href">Выйти</button></li>
                         </ul>
                     </nav>
                 </div>
@@ -28,9 +36,13 @@ function Header(props) {
         </header>
     )
 }
+
 Header.propTypes = {
     changePageHandler: PropTypes.func,
     logout: PropTypes.func,
 }
 
-export default Header;
+export default connect(
+    null,
+    { logIn, logOut }
+  )(Header);

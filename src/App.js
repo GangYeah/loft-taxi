@@ -1,10 +1,8 @@
 import './styles.css'
 
-import { withAuth } from './AuthContext'
 import Login from './Login'
 import Register from './Register'
 
-import Background from './Background'
 import Header from './Header'
 
 import Map from './Map'
@@ -12,18 +10,13 @@ import Profile from './Profile'
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
-let PAGES = {
-  'map': <Map />,
-  'profile': <Profile />,
-}
+import { Route, Redirect, Switch } from 'react-router-dom';
+import { connect } from "react-redux";
 
 class App extends React.Component {
   static propTypes = {
     isLoggedIn: PropTypes.bool
   }
-
-  state = { currPage: 'map', currMode: true };
 
   changeCurrentPage = (page) => {
     this.setState({ currPage: page });
@@ -36,29 +29,40 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {
-          this.props.isLoggedIn ? (
-            <>
-              <div className="page">
-                {PAGES[this.state.currPage]}
-              </div>
-              <Header {...this.props} changePageHandler={this.changeCurrentPage} />
-            </>
-          ) : (
-            <Background>
-              {
-              this.state.currMode ? (
-                <Login {...this.props} changeModeHandler={this.changeCurrentMode} />
-              ) : (
-                <Register changeModeHandler={this.changeCurrentMode} />
-              )
-              }
-            </Background>
-          )
-        }
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <PrivateRoute path="/map" component={Map} />
+          <PrivateRoute path="/profile" component={Profile} />
+          <Redirect to="/login" />
+        </Switch>
       </div>
     );
   }
 }
 
-export default withAuth(App);
+let PrivateRoute = ({
+  component: RouteComponent,
+  isLoggedIn,
+  ...rest
+}) => (
+  <Route
+    {...rest}
+    render={routeProps =>
+      isLoggedIn ? (
+        <>
+          <RouteComponent {...routeProps} />
+          <Header />
+        </>
+      ) : (
+        <Redirect to="/register" />
+      )
+    }
+  />
+);
+
+PrivateRoute = connect((state) => ({
+  isLoggedIn: state.auth.isLoggedIn,
+}))(PrivateRoute);
+
+export default connect((state) => ({ isLoggedIn: state.auth.isLoggedIn }))(App);

@@ -1,18 +1,15 @@
 import React from "react";
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
-import PropTypes from "prop-types";
+import Background from './Background'
+import { Link } from 'react-router-dom';
 
 class Register extends React.Component {
-    static propTypes = {
-        changeModeHandler: PropTypes.func
-    }
-
     state = { email: "", login: "", password: "" };
 
     handleSubmit = event => {
         event.preventDefault();
-        this.props.changeModeHandler(true);   
+        this.props.history.push('/login');
     };
 
     handleChange = event => {
@@ -25,7 +22,7 @@ class Register extends React.Component {
 
     render() {
         return (
-            <>
+            <Background>
                 <form onSubmit={this.handleSubmit} className="form" noValidate>
                     <h2>Регистрация</h2>
                     <div className="form__fields">
@@ -58,10 +55,9 @@ class Register extends React.Component {
                         </label>
                     </div>
                     <Button variant="contained" className="form__button" disabled={this.isValid()} type="submit">Зарегистрироваться</Button>
-                    <p className="form__reg">Уже зарегистрированы? <button type="button" onClick={() => this.props.changeModeHandler(true)} className="link">Войти</button></p>
+                    <p className="form__reg">Уже зарегистрированы? <Link to="/login" className="link">Войти</Link></p>
                 </form>
-
-            </>
+            </Background>
         );
     }
 }
