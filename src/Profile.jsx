@@ -3,17 +3,19 @@ import logo from './logo.svg'
 import chip from './vector1.svg'
 
 import { useState } from 'react';
-import { fetch_card } from "./actions";
+import { fetch_card, requestCard, selectCardDetails } from "./modules/payment";
+import { selectAuthToken } from "./modules/authorization";
 import { connect } from "react-redux";
 
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 
 function Profile(props) {
-    const [cardName, setCardName] = useState(props.cardData.cardName);
-    const [cardNumber, setCardNumber] = useState(props.cardData.cardNumber);
-    const [expireDate, setExpireDate] = useState(props.cardData.expireDate);
-    const [cvc, setCvc] = useState(props.cardData.cvc);
+
+    const [cardName, setCardName] = useState(props.cardDetails.cardName);
+    const [cardNumber, setCardNumber] = useState(props.cardDetails.cardNumber);
+    const [expireDate, setExpireDate] = useState(props.cardDetails.expireDate);
+    const [cvc, setCvc] = useState(props.cardDetails.cvc);
 
     const handleCardNameChange = e => {
         setCardName(e.target.value);
@@ -29,7 +31,11 @@ function Profile(props) {
     }
     const handleSubmit = e => {
         e.preventDefault();
-        props.fetch_card(...Array.from(new FormData(e.target).values()));
+        let formData = new FormData(e.target);
+        formData.append("authToken", props.authToken);
+        let values = Array.from(formData.values());
+        console.log(values);
+        props.fetch_card(...values);
     }
     return (
         <div className="page">
@@ -82,9 +88,9 @@ function Profile(props) {
                             <div className="card">
                                 <div className="card__row">
                                     <img className="card__loft-icon" src={logo} alt="logo" />
-                                    <span className="card__mmyy">05/08</span>
+                                    <span id="cardMmYy" className="card__mmyy">{expireDate}</span>
                                 </div>
-                                <p className="card__number">5545 2300 3432 4521</p>
+                                <p id="cardNumber" className="card__number">{cardNumber}</p>
                                 <div className="card__row">
                                     <img src={chip} alt="logo" />
                                     <div className="circles">
@@ -103,6 +109,9 @@ function Profile(props) {
 }
 
 export default connect(
-    (state) => ({ cardData: state.card }),
-    { fetch_card }
+    (state) => ({
+        cardDetails: selectCardDetails(state),
+        authToken: selectAuthToken(state)
+    }),
+    { fetch_card, requestCard }
 )(Profile);

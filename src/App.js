@@ -11,6 +11,7 @@ import Profile from './Profile'
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect, Switch } from 'react-router-dom';
+import { selectIsLoggedIn } from "./modules/authorization";
 import { connect } from "react-redux";
 
 class App extends React.Component {
@@ -62,7 +63,7 @@ let PrivateRoute = ({
 );
 
 PrivateRoute = connect((state) => ({
-  isLoggedIn: state.auth.isLoggedIn,
+  isLoggedIn: state.auth.isLoggedIn
 }))(PrivateRoute);
 
-export default connect((state) => ({ isLoggedIn: state.auth.isLoggedIn }))(App);
+export default connect((state) => ({ isLoggedIn: selectIsLoggedIn(state) }))(App);

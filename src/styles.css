@@ -67,6 +67,7 @@ input {
 }
 
 .button {
+    margin: 0 !important;
     width: 353px;
     padding: 16px 0;
     background: #D8D7D5;

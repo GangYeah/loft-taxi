@@ -49,7 +49,7 @@ const createAppTheme = () => {
                         padding: '12px 0 8px 0',
                     }
                 }
-            }
+            },
         }
     })
     
