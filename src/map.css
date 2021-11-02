@@ -1,0 +1,10 @@
+.map__form {
+    width: 480px;
+    position: fixed;
+    margin-top: 140px;
+    margin-left: 20px;
+    padding: 25px;
+}
+.map__input {
+    margin-bottom: 20px;
+}

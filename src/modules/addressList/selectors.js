@@ -1,0 +1,1 @@
+export const selectAddressList = state => state.address.list;
