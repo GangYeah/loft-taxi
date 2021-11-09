@@ -5,8 +5,8 @@ import { serverLogIn } from './api'
 export function* authWorker(action) {
   const { email, password } = action.payload;
   const result = yield call(serverLogIn, email, password);
-  if (true) {
-    yield put(logIn('rec9N8npU3uimgJ4l'));
+  if (result.success) {
+    yield put(logIn(result.token));
   }
 }
 export default function* watchAuth() {

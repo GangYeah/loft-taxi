@@ -5,8 +5,8 @@ import logo from './logo.svg'
 import logo_text from './lofttaxi.png'
 import PropTypes from "prop-types";
 import { Link, useHistory } from 'react-router-dom';
-import {logIn, logOut} from './modules/authorization'
-import {connect} from 'react-redux'
+import { logIn, logOut } from './modules/authorization'
+import { connect } from 'react-redux'
 
 function Header(props) {
     let history = useHistory();
@@ -45,4 +45,4 @@ Header.propTypes = {
 export default connect(
     null,
     { logIn, logOut }
-  )(Header);
+)(Header);

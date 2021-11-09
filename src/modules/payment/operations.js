@@ -6,14 +6,14 @@ const serverCardGet = async (authToken) => {
     .then(res => res.json());
 };
 
-const serverCardPost = async (cardName, cardNumber, expiryDate, cvc, authToken) => {
+const serverCardPost = async (cardName, cardNumber, expiryDate, cvc, token) => {
   return fetch(
     `https://loft-taxi.glitch.me/card`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ cardName, cardNumber, expiryDate, cvc, authToken })
+    body: JSON.stringify({ cardName, cardNumber, expiryDate, cvc, token })
   }).then(res => res.json()).then(data => data.success);
 };
 

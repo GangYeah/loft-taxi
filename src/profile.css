@@ -37,3 +37,8 @@
 .profile__left-label {
     margin-right: 25px;
 }
+
+.profile__dialog {
+    padding: 80px;
+    width: 820px;
+}

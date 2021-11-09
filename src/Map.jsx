@@ -49,7 +49,6 @@ class Map extends React.Component {
 
     componentDidMount() {
         this.props.requestCard(this.props.authToken);
-        this.props.routeInit();
         this.props.requestAddressList();
         mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FuZ3llYWgiLCJhIjoiY2t1c2MzbmJpMGRnMDJubWZ0NzhuM2t2YSJ9.HO4P6pztHjVahUFt2pnNWg';
         this.map = new mapboxgl.Map({
@@ -59,7 +58,11 @@ class Map extends React.Component {
             zoom: 10
         });
     }
-
+    componentDidUpdate() {
+        if (this.props.route.length && this.map) {
+             this.drawRoute();
+        }
+    }
     componentWillUnmount() {
         this.map.remove();
         this.props.routeInit();
@@ -110,9 +113,6 @@ class Map extends React.Component {
         }
         if ((value = this.state.adresses.address2) !== "") {
             arr1 = arr1.filter(item => item !== value)
-        }
-        if (this.props.route.length !== 0) {
-            this.drawRoute();
         }
         return (
             <>
