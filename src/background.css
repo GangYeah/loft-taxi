@@ -1,0 +1,28 @@
+.background {
+    display: flex;
+    height: 100vh;
+}
+.background__left {
+    width: 30%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.background__right {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: no-repeat url('./assets/map.png');
+    background-size: cover;
+}
+.background__logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.background__logo img:first-child {
+    width: 140px;
+    margin-bottom: 20px;
+}

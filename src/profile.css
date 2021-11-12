@@ -1,0 +1,47 @@
+.profile {
+    display: flex;
+    height: 88.3vh;
+    justify-content: center;
+    align-items: center;
+    background: no-repeat url('./assets/map1.png');
+    background-size: cover;
+    background-position: center;
+}
+.profile__form {
+    padding: 60px 45px;
+    width: 890px;
+}
+
+.profile__container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile__left {
+    width: 350px;
+}
+
+.profile__title {
+    margin-bottom: 15px;
+}
+
+.profile__subtitle {
+    margin-bottom: 50px;
+}
+
+.profile__fields {
+    margin-bottom: 0;
+}
+
+.profile__label {
+    margin-bottom: 25px !important;
+}
+
+.profile__left-label {
+    margin-right: 25px;
+}
+
+.profile__dialog {
+    padding: 80px;
+    width: 820px;
+}

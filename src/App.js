@@ -1,25 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Login from './Login'
+import Register from './Register'
+
+import Header from './Header'
+
+import Map from './Map'
+import Profile from './Profile'
+
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Route, Redirect, Switch } from 'react-router-dom';
+import { selectIsLoggedIn } from "./modules/authorization";
+import { connect } from "react-redux";
+
+class App extends React.Component {
+  static propTypes = {
+    isLoggedIn: PropTypes.bool
+  }
+
+  changeCurrentPage = (page) => {
+    this.setState({ currPage: page });
+  }
+
+  changeCurrentMode = (mode) => {
+    this.setState({ currMode: mode });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Switch>
+          <Route exact path="/" component={Login} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <PrivateRoute path="/map" component={Map} />
+          <PrivateRoute path="/profile" component={Profile} />
+        </Switch>
+      </div>
+    );
+  }
 }
 
-export default App;
+let PrivateRoute = ({
+  component: RouteComponent,
+  isLoggedIn,
+  ...rest
+}) => (
+  <Route
+    {...rest}
+    render={routeProps =>
+      isLoggedIn ? (
+        <>
+          <RouteComponent {...routeProps} />
+          <Header />
+        </>
+      ) : (
+        <Redirect to="/register" />
+      )
+    }
+  />
+);
+
+PrivateRoute = connect((state) => ({
+  isLoggedIn: state.auth.isLoggedIn
+}))(PrivateRoute);
+
+export default connect((state) => ({ isLoggedIn: selectIsLoggedIn(state) }))(App);
