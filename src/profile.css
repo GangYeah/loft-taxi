@@ -1,8 +1,11 @@
 .profile {
     display: flex;
-    height: 85vh;
+    height: 88.3vh;
     justify-content: center;
     align-items: center;
+    background: no-repeat url('./assets/map1.png');
+    background-size: cover;
+    background-position: center;
 }
 .profile__form {
     padding: 60px 45px;

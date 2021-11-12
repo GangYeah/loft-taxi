@@ -31,11 +31,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <Switch>
+          <Route exact path="/" component={Login} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <PrivateRoute path="/map" component={Map} />
           <PrivateRoute path="/profile" component={Profile} />
-          <Redirect to="/login" />
         </Switch>
       </div>
     );

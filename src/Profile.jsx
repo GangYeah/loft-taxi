@@ -1,19 +1,56 @@
 import './profile.css'
-import logo from './logo.svg'
-import chip from './vector1.svg'
+import logo from './assets/logo.svg'
+import chip from './assets/vector1.svg'
 
 import { Link } from 'react-router-dom';
-import { fetch_card, requestCard, selectCardDetails } from "./modules/payment";
+import { sendCard, selectCardDetails, selectCardDetailsError } from "./modules/payment";
 import { selectAuthToken } from "./modules/authorization";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import * as yup from 'yup';
 
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
+import InputMask from 'react-input-mask';
 import Input from '@mui/material/Input';
 import { useFormik } from 'formik';
 
-function Profile(props) {
+function Profile() {
+    const cardDetails = useSelector(state => selectCardDetails(state));
+    const cardDetailsError = useSelector(state => selectCardDetailsError(state));
+    const token = useSelector(state => selectAuthToken(state));
+
+    const dispatch = useDispatch();
+
+    function isValidExpiryDate() {
+        return this.test("isValidExpiryDate", function (value) {
+            if (!value) {
+                return false;
+            }
+            const { path, createError } = this;
+            let today, someday;
+            let [exMonth, exYear] = value.split('/');
+
+            if (exMonth > 13)
+                return createError({
+                    path,
+                    message: 'Месяцев всего 12!'
+                });
+            today = new Date();
+            someday = new Date();
+            someday.setFullYear(parseInt(exYear, 10) + 2000, exMonth, 1);
+
+            if (someday < today) {
+                return createError({
+                    path,
+                    message: 'Дата должна быть позже сегодняшней даты!'
+                });
+            }
+
+            return true;
+        });
+    }
+    yup.addMethod(yup.string, "isValidExpiryDate", isValidExpiryDate);
+
     const validationSchema = yup.object({
         cardName: yup
             .string()
@@ -26,7 +63,7 @@ function Profile(props) {
         expiryDate: yup
             .string()
             .required('Это обязательное поле!')
-            .matches(/^(0[1-9]|1[0-2])\/[0-9]{2}$/, 'Неверный формат'),
+            .isValidExpiryDate(),
         cvc: yup
             .string()
             .required('Это обязательное поле!')
@@ -34,14 +71,14 @@ function Profile(props) {
     });
 
     const formik = useFormik({
-        initialValues: props.cardDetails,
+        initialValues: cardDetails,
         onSubmit: (values, actions) => {
             actions.setSubmitting(true);
-            props.fetch_card(values.cardName, values.cardNumber, values.expiryDate, values.cvc, props.authToken);
+            dispatch(sendCard(values.cardName, values.cardNumber, values.expiryDate, values.cvc, token));
         },
         validationSchema: validationSchema,
     });
-    
+
     return (
         <div className="page">
             <div className="profile">
@@ -53,9 +90,10 @@ function Profile(props) {
                             <Link to="/map"><Button variant="contained">Перейти на карту</Button></Link>
                         </div>
                     ) : (
-                        <form name="bank_card" onSubmit={formik.handleSubmit} className="form profile__form">
+                        <form onSubmit={formik.handleSubmit} className="form profile__form">
                             <h1 className="profile__title">Профиль</h1>
                             <p className="profile__subtitle">Введите платежные данные</p>
+                            <div className="error">{cardDetailsError}</div>
                             <div className="profile__container">
                                 <div className="profile__left form__fields">
                                     <label className="form__label">
@@ -89,14 +127,18 @@ function Profile(props) {
                                     <div className="form__fields form__fields--hor profile__fields">
                                         <label className="form__label profile__left-label">
                                             MM/YY
-                                            <Input
-                                                type="text"
-                                                name="expiryDate"
-                                                value={formik.values.expiryDate}
+                                            <InputMask
+                                                mask="99/99"
                                                 onChange={formik.handleChange}
-                                                aria-describedby="component-helper-text-expiryDate"
-                                                error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
-                                            />
+                                                value={formik.values.expiryDate}>
+                                                {(inputProps) => <Input
+                                                    {...inputProps}
+                                                    type="text"
+                                                    name="expiryDate"
+                                                    aria-describedby="component-helper-text-expiryDate"
+                                                    error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
+                                                />}
+                                            </InputMask>
                                             <FormHelperText id="component-helper-text-expiryDate">
                                                 {formik.touched.expiryDate && formik.errors.expiryDate}
                                             </FormHelperText>
@@ -121,9 +163,9 @@ function Profile(props) {
                                     <div className="card">
                                         <div className="card__row">
                                             <img className="card__loft-icon" src={logo} alt="logo" />
-                                            <span id="cardMmYy" className="card__mmyy">{props.cardDetails.expiryDate || "XX/XX"}</span>
+                                            <span id="cardMmYy" className="card__mmyy">{cardDetails.expiryDate || "XX/XX"}</span>
                                         </div>
-                                        <p id="cardNumber" className="card__number">{props.cardDetails.cardNumber || "XXXX XXXX XXXX XXXX"}</p>
+                                        <p id="cardNumber" className="card__number">{cardDetails.cardNumber || "XXXX XXXX XXXX XXXX"}</p>
                                         <div className="card__row">
                                             <img src={chip} alt="logo" />
                                             <div className="circles">
@@ -143,10 +185,4 @@ function Profile(props) {
     );
 }
 
-export default connect(
-    (state) => ({
-        cardDetails: selectCardDetails(state),
-        authToken: selectAuthToken(state)
-    }),
-    { fetch_card, requestCard }
-)(Profile);
+export default Profile;

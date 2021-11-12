@@ -1,18 +1,18 @@
 import React from "react";
 
 import './header.css'
-import logo from './logo.svg'
-import logo_text from './lofttaxi.png'
-import PropTypes from "prop-types";
+import logo from './assets/logo.svg'
+import logo_text from './assets/lofttaxi.png'
 import { Link, useHistory } from 'react-router-dom';
-import { logIn, logOut } from './modules/authorization'
-import { connect } from 'react-redux'
+import { logOut } from './modules/authorization'
+import { useDispatch } from 'react-redux'
 
-function Header(props) {
-    let history = useHistory();
-
+function Header() {
+    const history = useHistory();
+    const dispatch = useDispatch()
+    
     function handleClick() {
-        props.logOut();
+        dispatch(logOut())
         history.push("/login");
     }
 
@@ -37,12 +37,4 @@ function Header(props) {
     )
 }
 
-Header.propTypes = {
-    changePageHandler: PropTypes.func,
-    logout: PropTypes.func,
-}
-
-export default connect(
-    null,
-    { logIn, logOut }
-)(Header);
+export default Header;

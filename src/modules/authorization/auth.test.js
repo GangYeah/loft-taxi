@@ -1,11 +1,8 @@
-import { authWorker } from "./operations";
+import { authenticate as authWorker } from "./operations";
 import { authenticate } from "./actions";
 import { recordSaga } from "../recordSaga";
 
-jest.mock("./api", () => ({ serverLogIn: jest.fn(() => ({ 
-  success: true, 
-  token: "AUTH_TOKEN" 
-}))}));
+jest.mock("../api", () => ({ makeServerRequest: () => ({ success: true, token: "AUTH_TOKEN" })}));
 
 describe("authSaga", () => {
   describe("#AUTHENTICATE", () => {
@@ -18,7 +15,7 @@ describe("authSaga", () => {
       expect(dispatched).toEqual([
         {
           type: "LOG_IN",
-          payload: 'rec9N8npU3uimgJ4l'
+          payload: 'AUTH_TOKEN'
         },
       ]);
     });

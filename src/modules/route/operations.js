@@ -1,18 +1,15 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { requestRouteSuccess, REQUEST_ROUTE } from "./actions";
+import { makeServerRequest } from '../api';
+import { requestRouteSuccess, requestRouteFailure, REQUEST_ROUTE } from "./actions";
 
-const getRoute = async (address1, address2) => {
-  return fetch(`https://loft-taxi.glitch.me/route?address1=${address1}&address2=${address2}`)
-    .then(res => res.json());
-};
-function* routeWorker(action) {
+export function* getRoute(action) {
   try {
-    const {address1, address2} = action.payload;
-    const res = yield call(getRoute, address1, address2);
+    const res = yield call(makeServerRequest, "GET", "route", action.payload);
     yield put(requestRouteSuccess(res))
-  } catch (error) {
+  } catch (e) {
+    yield put(requestRouteFailure(e.message))
   }
 }
 export default function* watchRoute() {
-  yield takeLatest(REQUEST_ROUTE, routeWorker);
+  yield takeLatest(REQUEST_ROUTE, getRoute);
 }

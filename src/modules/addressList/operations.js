@@ -1,17 +1,16 @@
 import { takeEvery, call, put } from 'redux-saga/effects';
-import { requestAddressListSuccess, REQUEST_ADDRESS_LIST } from "./actions";
+import { makeServerRequest } from '../api';
+import { requestAddressListSuccess, requestAddressListFailure, REQUEST_ADDRESS_LIST } from "./actions";
 
-const getAddressList = async () => {
-  return fetch(`https://loft-taxi.glitch.me/addressList`)
-    .then(res => res.json()).then(data => data.addresses);;
-};
-function* addressListWorker() {
+export function* getAddressList() {
   try {
-    const res = yield call(getAddressList);
-    yield put(requestAddressListSuccess(res))
-  } catch (error) {
+    const res = yield call(makeServerRequest, "GET", "addressList");
+    yield put(requestAddressListSuccess(res.addresses))
+  }
+  catch (e) {
+    yield put(requestAddressListFailure(e.message));
   }
 }
 export default function* watchAddressList() {
-  yield takeEvery(REQUEST_ADDRESS_LIST, addressListWorker);
+  yield takeEvery(REQUEST_ADDRESS_LIST, getAddressList);
 }

@@ -5,12 +5,14 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
+import PropTypes from 'prop-types'
 import { connect } from "react-redux";
 import { requestAddressList, selectAddressList } from "./modules/addressList";
-import { requestCard, selectCardDetails, selectIsCardDetailsIsFill } from "./modules/payment";
-import { requestRoute, selectRoute, routeInit } from "./modules/route";
+import { requestCard, selectCardDetails, selectCardDetailsError, selectIsCardDetailsIsFill } from "./modules/payment";
+import { requestRoute, selectRoute, routeInit, selectRouteError } from "./modules/route";
 import { selectAuthToken } from './modules/authorization';
 
 class Map extends React.Component {
@@ -59,8 +61,8 @@ class Map extends React.Component {
         });
     }
     componentDidUpdate() {
-        if (this.props.route.length && this.map) {
-             this.drawRoute();
+        if (this.props.route.length && this.map && !this.props.routeError) {
+            this.drawRoute();
         }
     }
     componentWillUnmount() {
@@ -116,7 +118,7 @@ class Map extends React.Component {
         }
         return (
             <>
-                <div style={style} ref={el => this.mapContainer = el} />
+                <div data-testid="map" style={style} ref={el => this.mapContainer = el} />
                 {
                     this.props.isCardDetailsIsFill ? (
                         this.state.isOrdered ? (
@@ -127,6 +129,7 @@ class Map extends React.Component {
                             </form>
                         ) : (
                             <form onSubmit={this.handleSubmit.bind(this)} className="form map__form">
+                                <div className="error">{this.props.cardDetailsError}</div>
                                 <Autocomplete
                                     className="map__input"
                                     disablePortal
@@ -157,12 +160,28 @@ class Map extends React.Component {
     }
 }
 
+Map.propTypes = {
+    isCardDetailsIsFill: PropTypes.bool,
+    cardDetails: PropTypes.object,
+    cardDetailsError: PropTypes.string,
+    addressList: PropTypes.array,
+    authToken: PropTypes.string,
+    routeError: PropTypes.string,
+    route: PropTypes.array,
+    requestAddressList: PropTypes.func,
+    requestCard: PropTypes.func, 
+    requestRoute: PropTypes.func, 
+    routeInit: PropTypes.func,
+}
+
 export default connect(
     (state) => ({
         isCardDetailsIsFill: selectIsCardDetailsIsFill(state),
         cardDetails: selectCardDetails(state),
+        cardDetailsError: selectCardDetailsError(state),
         addressList: selectAddressList(state),
         authToken: selectAuthToken(state),
+        routeError: selectRouteError(state),
         route: selectRoute(state)
     }),
     { requestAddressList, requestCard, requestRoute, routeInit }

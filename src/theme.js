@@ -50,6 +50,15 @@ const createAppTheme = () => {
                     }
                 }
             },
+            MuiFormHelperText: {
+                styleOverrides: {
+                    root: {
+                        color: '#f00',
+                        fontSize: '1.2rem',
+                        lineHeight: '1.4rem'
+                    }
+                }
+            }
         }
     })
     

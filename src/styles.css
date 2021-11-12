@@ -193,6 +193,7 @@ input {
     height: 28px;
     position: relative;
 }
+
 .circle {
     position: absolute;
     width: 28px;
@@ -201,9 +202,20 @@ input {
     mix-blend-mode: multiply;
     border-radius: 50%;
 }
+
 .circle:first-child {
     left: 0;
 }
+
 .circle:last-child {
     right: 0;
+}
+
+.error {
+    font-size: 1.6rem;
+    color: #f00; 
+}
+
+.error--mt {
+    margin-top: -20px;
 }

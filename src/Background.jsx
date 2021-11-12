@@ -1,6 +1,6 @@
 import './background.css'
-import logo from './logo.svg'
-import logo_text from './lofttaxi.png'
+import logo from './assets/logo.svg'
+import logo_text from './assets/lofttaxi.png'
 
 function Background(props) {
     return (

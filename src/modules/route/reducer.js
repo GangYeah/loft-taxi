@@ -1,8 +1,9 @@
-import { REQUEST_ROUTE, REQUEST_ROUTE_SUCCESS, ROUTE_INIT } from "./actions";
+import { REQUEST_ROUTE, REQUEST_ROUTE_SUCCESS, REQUEST_ROUTE_FAILURE, ROUTE_INIT } from "./actions";
 
 const initialState = {
   route: [],
-  addresses: {}
+  addresses: {},
+  error: ""
 };
 const reduce = function (state = initialState, action) {
   switch (action.type) {
@@ -15,14 +16,23 @@ const reduce = function (state = initialState, action) {
     case REQUEST_ROUTE_SUCCESS: {
       return {
         ...state,
-        route: action.payload
+        route: action.payload,
+        error: ""
+      };
+    }
+    case REQUEST_ROUTE_FAILURE: {
+      return {
+        ...state,
+        route: [],
+        error: action.payload
       };
     }
     case ROUTE_INIT: {
       return {
         ...state,
         route: [],
-        addresses: {}
+        addresses: {},
+        error: ""
       };
     }
     default:

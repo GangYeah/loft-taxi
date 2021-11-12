@@ -1,27 +1,20 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
-import { REGISTER, registerSuccess } from "./actions";
+import { takeEvery, call, put } from 'redux-saga/effects';
+import { REGISTER, registerSuccess, registerFailure } from "./actions";
+import { makeServerRequest } from '../api';
 
-const serverRegister = async (email, password, name, surname) => {
-  return fetch(
-    `https://loft-taxi.glitch.me/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password, name, surname })
-  }
-  ).then(res => res.json()).then(data => data.success);;
-};
-function* registrationWorker(action) {
+export function* register(action) {
   try {
-    const { email, password, name, surname } = action.payload;
-    const success = yield call(serverRegister, email, password, name, surname);
-    if (success) {
+    const result = yield call(makeServerRequest, "POST", "register", action.payload);
+    if (result.success) {
       yield put(registerSuccess())
     }
-  } catch (error) {
+    else {
+      yield put(registerFailure(result.error))
+    }
+  } catch (e) {
+    yield put(registerFailure(e.message))
   }
 }
 export default function* watchRegistration() {
-  yield takeLatest(REGISTER, registrationWorker);
+  yield takeEvery(REGISTER, register);
 }

@@ -1,6 +1,7 @@
 export const ROUTE_INIT = "ROUTE_INIT";
 export const REQUEST_ROUTE = "REQUEST_ROUTE";
 export const REQUEST_ROUTE_SUCCESS = "REQUEST_ROUTE_SUCCESS";
+export const REQUEST_ROUTE_FAILURE = "REQUEST_ROUTE_FAILURE";
 
 export const requestRoute = (address1, address2) => ({
     type: REQUEST_ROUTE,
@@ -12,5 +13,9 @@ export const requestRoute = (address1, address2) => ({
 export const requestRouteSuccess = (res) => ({
     type: REQUEST_ROUTE_SUCCESS,
     payload: res
+});
+export const requestRouteFailure = (error) => ({
+    type: REQUEST_ROUTE_FAILURE,
+    payload: error
 });
 export const routeInit = () => ({ type: ROUTE_INIT });

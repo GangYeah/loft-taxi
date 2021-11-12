@@ -14,7 +14,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: no-repeat url('./map.png');
+    background: no-repeat url('./assets/map.png');
     background-size: cover;
 }
 .background__logo {

@@ -1,8 +1,9 @@
-import { REGISTER_INIT, REGISTER, REGISTER_SUCCESS } from "./actions";
+import { REGISTER_INIT, REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE } from "./actions";
 
 const initialState = {
   fields: {},
-  isRegistered: false
+  isRegistered: false,
+  error: ""
 };
 const reduce = function (state = initialState, action) {
   switch (action.type) {
@@ -10,14 +11,16 @@ const reduce = function (state = initialState, action) {
       return {
         ...state,
         fields: {},
-        isRegistered: false
+        isRegistered: false,
+        error: ""
       }
     }
     case REGISTER: {
       return {
         ...state,
         fields: action.payload,
-        isRegistered: false
+        isRegistered: false,
+        error: ""
       };     
     }
     case REGISTER_SUCCESS: {
@@ -25,6 +28,13 @@ const reduce = function (state = initialState, action) {
         ...state,
         fields: {},
         isRegistered: true
+      };
+    }
+    case REGISTER_FAILURE: {
+      return {
+        ...state,
+        isRegistered: false,
+        error: action.payload
       };
     }
     default:
